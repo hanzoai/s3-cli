@@ -178,7 +178,7 @@ cat      cp       events   mb       pipe     rm       share    version
 
 ## 了解更多
 
-- [Hanzo S3 CLI 文档](https://hanzo.space/docs/cli)
+- [Hanzo S3 CLI 文档](https://s3.hanzo.ai/docs/cli)
 
 ## 贡献
 
