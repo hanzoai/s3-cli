@@ -1,6 +1,6 @@
 module github.com/minio/mc
 
-go 1.26
+go 1.26.1
 
 toolchain go1.24.9
 
