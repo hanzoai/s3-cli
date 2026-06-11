@@ -37,7 +37,6 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/xattr v0.4.10
 	github.com/posener/complete v1.2.3
-	github.com/prometheus/client_golang v1.21.1
 	github.com/prometheus/procfs v0.16.0
 	github.com/rjeczalik/notify v0.9.3
 	github.com/rs/xid v1.6.0
@@ -187,6 +186,7 @@ require (
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20250317134145-8bc96cf8fc35 // indirect
+	github.com/luxfi/metric v1.5.8
 	github.com/macabu/inamedparam v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/manuelarte/embeddedstructfieldcheck v0.4.0 // indirect
