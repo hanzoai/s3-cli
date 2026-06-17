@@ -64,7 +64,7 @@ jobs:
   vetchecks: # Run vet checks against one version.
     env:
       CGO_ENABLED: 0
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
