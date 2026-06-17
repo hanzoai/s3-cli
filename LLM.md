@@ -1,4 +1,4 @@
-# LLM.md - Hanzo S3 Cli
+# Hanzo S3 Cli
 
 ## Overview
 Go module: github.com/minio/mc
