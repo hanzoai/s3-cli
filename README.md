@@ -4,7 +4,7 @@
 
 ## Documentation
 
-- [Hanzo S3 CLI documentation](https://hanzo.space/docs/cli)
+- [Hanzo S3 CLI documentation](https://s3.hanzo.ai/docs/cli)
 
 Hanzo S3 CLI (`s3`) provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff, find etc. It supports filesystems and Amazon S3 compatible cloud storage services (AWS Signature v2 and v4).
 

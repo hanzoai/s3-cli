@@ -92,7 +92,7 @@ FLAGS:
   {{end}}{{end}}
 
 SERIALIZATION OPTIONS:
-  For query serialization options, refer to https://hanzo.space/docs/community/cli/s3-sql.html
+  For query serialization options, refer to https://s3.hanzo.ai/docs/community/cli/s3-sql.html
 
 EXAMPLES:
   1. Run a query on a set of objects recursively on AWS S3.
