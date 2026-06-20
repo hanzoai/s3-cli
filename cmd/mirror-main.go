@@ -33,6 +33,7 @@ import (
 	"github.com/dustin/go-humanize"
 
 	"github.com/fatih/color"
+	metric "github.com/luxfi/metric"
 	"github.com/minio/cli"
 	json "github.com/minio/colorjson"
 	"github.com/minio/mc/pkg/probe"
@@ -40,9 +41,6 @@ import (
 	"github.com/minio/minio-go/v7/pkg/encrypt"
 	"github.com/minio/minio-go/v7/pkg/notification"
 	"github.com/minio/pkg/v3/console"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // mirror specific flags.
@@ -232,27 +230,27 @@ EXAMPLES:
 }
 
 var (
-	mirrorTotalOps = promauto.NewCounter(prometheus.CounterOpts{
+	mirrorTotalOps = metric.NewCounter(metric.CounterOpts{
 		Name: "mc_mirror_total_s3ops",
 		Help: "The total number of mirror operations",
 	})
-	mirrorTotalUploadedBytes = promauto.NewCounter(prometheus.CounterOpts{
+	mirrorTotalUploadedBytes = metric.NewCounter(metric.CounterOpts{
 		Name: "mc_mirror_total_s3uploaded_bytes",
 		Help: "The total number of bytes uploaded",
 	})
-	mirrorFailedOps = promauto.NewCounter(prometheus.CounterOpts{
+	mirrorFailedOps = metric.NewCounter(metric.CounterOpts{
 		Name: "mc_mirror_failed_s3ops",
 		Help: "The total number of failed mirror operations",
 	})
-	mirrorRestarts = promauto.NewCounter(prometheus.CounterOpts{
+	mirrorRestarts = metric.NewCounter(metric.CounterOpts{
 		Name: "mc_mirror_total_restarts",
 		Help: "The number of mirror restarts",
 	})
-	mirrorReplicationDurations = promauto.NewHistogramVec(
-		prometheus.HistogramOpts{
+	mirrorReplicationDurations = metric.NewHistogramVec(
+		metric.HistogramOpts{
 			Name:    "mc_mirror_replication_duration",
 			Help:    "Histogram of replication time in ms per object sizes",
-			Buckets: prometheus.ExponentialBuckets(1, 20, 5),
+			Buckets: metric.ExponentialBuckets(1, 20, 5),
 		},
 		[]string{"object_size"},
 	)
@@ -532,7 +530,7 @@ func (mj *mirrorJob) doMirror(ctx context.Context, sURLs URLs, event EventInfo) 
 		ret = uploadSourceToTargetURL(ctx, uploadSourceToTargetURLOpts{urls: sURLs, progress: mj.status, encKeyDB: mj.opts.encKeyDB, preserve: mj.opts.isMetadata, isZip: false})
 		if ret.Error == nil {
 			durationMs := time.Since(now).Milliseconds()
-			mirrorReplicationDurations.With(prometheus.Labels{"object_size": convertSizeToTag(sURLs.SourceContent.Size)}).Observe(float64(durationMs))
+			mirrorReplicationDurations.With(metric.Labels{"object_size": convertSizeToTag(sURLs.SourceContent.Size)}).Observe(float64(durationMs))
 		}
 
 		return ret
@@ -551,7 +549,7 @@ func (mj *mirrorJob) doMirror(ctx context.Context, sURLs URLs, event EventInfo) 
 		ret = uploadSourceToTargetURL(ctx, uploadSourceToTargetURLOpts{urls: sURLs, progress: mj.status, encKeyDB: mj.opts.encKeyDB, preserve: mj.opts.isMetadata, isZip: false})
 		if ret.Error == nil {
 			durationMs := time.Since(now).Milliseconds()
-			mirrorReplicationDurations.With(prometheus.Labels{"object_size": convertSizeToTag(sURLs.SourceContent.Size)}).Observe(float64(durationMs))
+			mirrorReplicationDurations.With(metric.Labels{"object_size": convertSizeToTag(sURLs.SourceContent.Size)}).Observe(float64(durationMs))
 		}
 
 		return ret.Error
@@ -1173,7 +1171,7 @@ func mainMirror(cliCtx *cli.Context) error {
 	srcURL, tgtURL := checkMirrorSyntax(ctx, cliCtx, encKeyDB)
 
 	if prometheusAddress := cliCtx.String("monitoring-address"); prometheusAddress != "" {
-		http.Handle("/metrics", promhttp.Handler())
+		http.Handle("/metrics", metric.NewHTTPHandler(metric.DefaultGatherer, metric.HandlerOpts{}))
 		go func() {
 			if e := http.ListenAndServe(prometheusAddress, nil); e != nil {
 				fatalIf(probe.NewError(e), "Unable to setup monitoring endpoint.")
