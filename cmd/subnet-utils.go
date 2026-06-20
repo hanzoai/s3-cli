@@ -45,7 +45,7 @@ import (
 
 const (
 	subnetRespBodyLimit     = 1 << 20 // 1 MiB
-	minioSubscriptionURL    = "https://hanzo.space/subscription"
+	minioSubscriptionURL    = "https://s3.hanzo.ai/subscription"
 	subnetPublicKeyPath     = "/downloads/license-pubkey.pem"
 	minioDeploymentIDHeader = "x-minio-deployment-id"
 )

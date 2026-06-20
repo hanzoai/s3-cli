@@ -1,4 +1,4 @@
-FROM golang:1.24-alpine AS build
+FROM golang:1.26.4-alpine AS build
 
 LABEL maintainer="Hanzo AI, Inc. <dev@hanzo.ai>"
 
