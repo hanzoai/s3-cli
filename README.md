@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="s3-cli" width="880"></p>
+
 # Hanzo S3 CLI
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/hanzos3/cli)](https://goreportcard.com/report/github.com/hanzos3/cli) [![license](https://img.shields.io/badge/license-AGPL%20V3-blue)](https://github.com/hanzos3/cli/blob/main/LICENSE)
