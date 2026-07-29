@@ -1,6 +1,6 @@
 module github.com/minio/mc
 
-go 1.26.4
+go 1.26.5
 
 // Install tools using 'go install tool'.
 tool (
@@ -49,6 +49,15 @@ require (
 	golang.org/x/text v0.35.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/yaml.v2 v2.4.0
+)
+
+require (
+	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
+	github.com/gorilla/rpc v1.2.1 // indirect
+	github.com/grandcat/zeroconf v1.0.0 // indirect
+	github.com/luxfi/mdns v0.1.0 // indirect
+	github.com/luxfi/zap v0.6.0 // indirect
+	github.com/miekg/dns v1.1.63 // indirect
 )
 
 require (
@@ -294,7 +303,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20250603155806-513f23925822 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250728155136-f173205681a0 // indirect
 	google.golang.org/grpc v1.74.2 // indirect
-	google.golang.org/protobuf v1.36.6 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.6.1 // indirect
