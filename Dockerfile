@@ -1,4 +1,5 @@
-FROM golang:1.26.4-alpine AS build
+FROM golang:1.26.5-alpine AS build
+ENV GOTOOLCHAIN=auto
 
 LABEL maintainer="Hanzo AI, Inc. <dev@hanzo.ai>"
 
