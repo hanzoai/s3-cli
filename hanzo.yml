@@ -1,0 +1,10 @@
+# The s3 CLI (a fork of minio/mc) — ships as a binary from a tag, not an image.
+# Gate: the module compiles and the whole unit suite runs. `make test` also runs
+# Test_FullSuite against a live S3 endpoint with credentials; that is a
+# functional harness, not something a push can prove.
+test:
+  - name: build-and-unit
+    run: |
+      set -euo pipefail
+      go build ./...
+      go test ./...
