@@ -8,3 +8,11 @@ test:
       set -euo pipefail
       go build ./...
       go test ./...
+  # Nine `go build -o /dev/null` runs across the OS/arch set the CLI ships for.
+  # It came from .github/workflows/go-cross.yml, which fired only on pull
+  # requests to `master` — a branch this repo does not use — so it had been
+  # running nowhere for as long as `main` has been the default.
+  - name: crosscompile
+    run: |
+      set -euo pipefail
+      make crosscompile
