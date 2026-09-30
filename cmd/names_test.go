@@ -9,7 +9,7 @@ import (
 // TestNoForeignProductNames fails when a tracked file names another object
 // store. LICENSE, NOTICE and CREDITS carry legally required attribution.
 func TestNoForeignProductNames(t *testing.T) {
-	out, err := exec.Command("git", "-C", "..", "grep", "-lIE", "minio|MinIO|Minio|MINIO|min\\.io").Output()
+	out, err := exec.Command("git", "-C", "..", "grep", "-lIE", "-i", "-e", "minio", "-e", "min\\.io", "-e", "subnet").Output()
 	if err != nil && len(out) == 0 {
 		t.Skip("not a git checkout")
 	}

@@ -25,7 +25,6 @@ import (
 	"net"
 	"net/http"
 	"net/netip"
-	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -82,9 +81,6 @@ var (
 
 	// GlobalTrapSignals is set to true if need to trap the registered signals and cancel the global context.
 	GlobalTrapSignals = true
-
-	// GlobalSubnetProxyURL is the proxy to be used for communication with subnet
-	GlobalSubnetProxyURL *url.URL
 
 	globalConnReadDeadline  time.Duration
 	globalConnWriteDeadline time.Duration
