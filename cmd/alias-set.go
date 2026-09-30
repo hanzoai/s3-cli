@@ -30,10 +30,10 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 	"golang.org/x/term"
 )
 
@@ -212,7 +212,7 @@ func probeS3Signature(ctx context.Context, accessKey, secretKey, url string, pee
 			// AccessDenied means Stat() is not allowed but credentials are valid.
 			// AccessDenied is only returned when policy doesn't allow HeadBucket
 			// operations.
-			if minio.ToErrorResponse(err.ToGoError()).Code == "AccessDenied" {
+			if s3.ToErrorResponse(err.ToGoError()).Code == "AccessDenied" {
 				return stype, nil
 			}
 

@@ -29,11 +29,11 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 // rm specific flags.
@@ -312,7 +312,7 @@ func removeSingle(url, versionID string, opts removeOpts) error {
 			ignoreBucketExistsCheck: false,
 		})
 		if pErr != nil {
-			switch st := minio.ToErrorResponse(pErr.ToGoError()).StatusCode; st {
+			switch st := s3.ToErrorResponse(pErr.ToGoError()).StatusCode; st {
 			case http.StatusBadRequest, http.StatusMethodNotAllowed:
 				ignoreStatError = true
 			default:
@@ -575,7 +575,7 @@ func listAndRemove(url string, opts removeOpts) error {
 						case PathInsufficientPermission:
 							// Ignore Permission error.
 							continue
-						case minio.ErrorResponse:
+						case s3.ErrorResponse:
 							if strings.Contains(e.Message, "Object is WORM protected and cannot be overwritten") {
 								continue
 							}

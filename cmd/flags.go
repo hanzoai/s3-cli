@@ -23,9 +23,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 const envPrefix = "MC_"
@@ -66,7 +66,7 @@ var globalFlags = []cli.Flag{
 	},
 	cli.StringSliceFlag{
 		Name:   "resolve",
-		Usage:  "resolves HOST[:PORT] to an IP address. Example: minio.local:9000=10.10.75.1",
+		Usage:  "resolves HOST[:PORT] to an IP address. Example: s3.local:9000=10.10.75.1",
 		EnvVar: envPrefix + "RESOLVE",
 	},
 	cli.BoolFlag{
@@ -132,24 +132,24 @@ var checksumFlag = cli.StringFlag{
 	Value: "",
 }
 
-func parseChecksum(ctx *cli.Context) (useMD5 bool, ct minio.ChecksumType) {
+func parseChecksum(ctx *cli.Context) (useMD5 bool, ct s3.ChecksumType) {
 	useMD5 = ctx.Bool("md5")
 	if cs := ctx.String("checksum"); cs != "" {
 		switch strings.ToUpper(cs) {
 		case "CRC32":
-			ct = minio.ChecksumCRC32
+			ct = s3.ChecksumCRC32
 		case "CRC32C":
-			ct = minio.ChecksumCRC32C
+			ct = s3.ChecksumCRC32C
 		case "CRC32-FO":
-			ct = minio.ChecksumFullObjectCRC32
+			ct = s3.ChecksumFullObjectCRC32
 		case "CRC32C-FO":
-			ct = minio.ChecksumFullObjectCRC32C
+			ct = s3.ChecksumFullObjectCRC32C
 		case "SHA1":
-			ct = minio.ChecksumSHA1
+			ct = s3.ChecksumSHA1
 		case "SHA256":
-			ct = minio.ChecksumSHA256
+			ct = s3.ChecksumSHA256
 		case "CRC64N", "CRC64NVME":
-			ct = minio.ChecksumCRC64NVME
+			ct = s3.ChecksumCRC64NVME
 		case "MD5":
 			useMD5 = true
 		default:

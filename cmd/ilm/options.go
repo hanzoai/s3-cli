@@ -25,9 +25,9 @@ import (
 	"strings"
 
 	"github.com/dustin/go-humanize"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzos3/go/pkg/lifecycle"
 	"github.com/rs/xid"
 )
 
@@ -317,7 +317,7 @@ func GetLifecycleOptions(ctx *cli.Context) (LifecycleOptions, *probe.Error) {
 	if noncurrentTier != nil && !ctx.IsSet("noncurrentversion-transition-days") && !ctx.IsSet("noncurrent-transition-days") {
 		return LifecycleOptions{}, probe.NewError(errors.New("noncurrentversion-transition-days must be set"))
 	}
-	// for MinIO transition storage-class is same as label defined on
+	// for Hanzo S3 transition storage-class is same as label defined on
 	// `mc admin bucket remote add --service ilm --label` command
 	if ctx.IsSet("tags") {
 		tags = strPtr(ctx.String("tags"))

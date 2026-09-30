@@ -17,7 +17,7 @@
 
 package cmd
 
-import "github.com/minio/cli"
+import "github.com/hanzoai/s3-cli/pkg/cli"
 
 var ilmDepCmds = []cli.Command{
 	ilmDepAddCmd,
@@ -54,15 +54,15 @@ EXAMPLES:
      {{.Prompt}} {{.HelpName}} --expire-days "200" mys3/mybucket
 
   2. Add a lifecycle rule with a transition and a noncurrent version transition action for objects with prefix doc/ in mybucket.
-     Tiers must exist in MinIO. Use existing tiers or add new tiers.
-     {{.Prompt}} mc tier add minio mys3 MINIOTIER-1 --endpoint https://warm-minio-1.com \
+     Tiers must exist in Hanzo S3. Use existing tiers or add new tiers.
+     {{.Prompt}} mc tier add s3 mys3 WARMTIER-1 --endpoint https://warm-s3-1.com \
          --access-key ACCESSKEY --secret-key SECRETKEY --bucket bucket1 --prefix prefix1
 
-     {{.Prompt}} mc tier add minio mys3 MINIOTIER-2 --endpoint https://warm-minio-2.com \
+     {{.Prompt}} mc tier add s3 mys3 WARMTIER-2 --endpoint https://warm-s3-2.com \
          --access-key ACCESSKEY --secret-key SECRETKEY --bucket bucket2 --prefix prefix2
 
-     {{.Prompt}} {{.HelpName}} --prefix "doc/" --transition-days "90" --transition-tier "MINIOTIER-1" \
-          --noncurrent-transition-days "45" --noncurrent-transition-tier "MINIOTIER-2" \
+     {{.Prompt}} {{.HelpName}} --prefix "doc/" --transition-days "90" --transition-tier "WARMTIER-1" \
+          --noncurrent-transition-days "45" --noncurrent-transition-tier "WARMTIER-2" \
           mys3/mybucket/
 
   3. Add a lifecycle rule with an expiration and a noncurrent version expiration action for all objects with prefix doc/ in mybucket.

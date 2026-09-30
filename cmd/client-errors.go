@@ -92,7 +92,7 @@ func (e ObjectAlreadyExists) Error() string {
 	return "Object `" + e.Object + "` already exists."
 }
 
-// ObjectAlreadyExistsAsDirectory - typed return for XMinioObjectExistsAsDirectory
+// ObjectAlreadyExistsAsDirectory - typed return for XS3ObjectExistsAsDirectory
 type ObjectAlreadyExistsAsDirectory struct {
 	Object string
 }

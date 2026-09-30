@@ -22,9 +22,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/minio/cli"
-	"github.com/minio/pkg/v3/console"
-	"github.com/minio/pkg/v3/env"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/env"
 
 	"github.com/fatih/color"
 )

@@ -23,10 +23,10 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 var encryptSetCmd = cli.Command{
@@ -47,7 +47,7 @@ FLAGS:
   {{end}}
 EXAMPLES:
   1. Enable SSE-KMS auto encryption with KMS key on bucket "mybucket" for alias "mys3".
-     {{.Prompt}} {{.HelpName}} sse-kms my-minio-key mys3/mybucket
+     {{.Prompt}} {{.HelpName}} sse-kms my-kms-key mys3/mybucket
 
   2. Enable SSE-KMS auto encryption with KMS key on bucket "mybucket" for alias "s3".
      {{.Prompt}} {{.HelpName}} sse-kms arn:aws:kms:us-east-1:xxx:key/xxx s3/mybucket  

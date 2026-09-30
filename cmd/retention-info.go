@@ -24,11 +24,11 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 var retentionInfoFlags = []cli.Flag{
@@ -116,12 +116,12 @@ func parseInfoRetentionArgs(cliCtx *cli.Context) (target, versionID string, recu
 
 // Structured message depending on the type of console.
 type retentionInfoMessage struct {
-	Mode      minio.RetentionMode `json:"mode"`
-	Until     time.Time           `json:"until"`
-	URLPath   string              `json:"urlpath"`
-	VersionID string              `json:"versionID"`
-	Status    string              `json:"status"`
-	Err       error               `json:"error"`
+	Mode      s3.RetentionMode `json:"mode"`
+	Until     time.Time        `json:"until"`
+	URLPath   string           `json:"urlpath"`
+	VersionID string           `json:"versionID"`
+	Status    string           `json:"status"`
+	Err       error            `json:"error"`
 }
 
 type retentionInfoMessageList retentionInfoMessage
@@ -134,7 +134,7 @@ func (m *retentionInfoMessageList) SetStatus(status string) {
 	m.Status = status
 }
 
-func (m *retentionInfoMessageList) SetMode(mode minio.RetentionMode) {
+func (m *retentionInfoMessageList) SetMode(mode s3.RetentionMode) {
 	m.Mode = mode
 }
 
@@ -155,7 +155,7 @@ func (m retentionInfoMessageList) String() string {
 		retentionField += console.Colorize("RetentionNotFound", "NO RETENTION")
 	} else {
 		exp := ""
-		if m.Mode == minio.Governance {
+		if m.Mode == s3.Governance {
 			now := time.Now()
 			if now.After(m.Until) {
 				exp = "EXPIRED"
@@ -194,7 +194,7 @@ func (m *retentionInfoMessageRecord) SetStatus(status string) {
 	m.Status = status
 }
 
-func (m *retentionInfoMessageRecord) SetMode(mode minio.RetentionMode) {
+func (m *retentionInfoMessageRecord) SetMode(mode s3.RetentionMode) {
 	m.Mode = mode
 }
 
@@ -252,7 +252,7 @@ type retentionInfoMsg interface {
 	message
 	SetErr(error)
 	SetStatus(string)
-	SetMode(minio.RetentionMode)
+	SetMode(s3.RetentionMode)
 	SetUntil(time.Time)
 }
 
@@ -279,7 +279,7 @@ func infoRetentionSingle(ctx context.Context, alias, url, versionID string, list
 
 	mode, until, err := newClnt.GetObjectRetention(ctx, versionID)
 	if err != nil {
-		errResp := minio.ToErrorResponse(err.ToGoError())
+		errResp := s3.ToErrorResponse(err.ToGoError())
 		if errResp.Code != "NoSuchObjectLockConfiguration" {
 			if _, ok := err.ToGoError().(ObjectNameEmpty); !ok {
 				msg.SetErr(err.ToGoError())

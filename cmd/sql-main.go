@@ -31,10 +31,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/mimedb"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/mimedb"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 var sqlFlags = []cli.Flag{
@@ -366,7 +366,7 @@ func getSQLOpts(ctx *cli.Context, csvHdrs []string) (s SelectObjectOpts) {
 	return SelectObjectOpts{
 		InputSerOpts:    is,
 		OutputSerOpts:   os,
-		CompressionType: minio.SelectCompressionType(ctx.String("compression")),
+		CompressionType: s3.SelectCompressionType(ctx.String("compression")),
 	}
 }
 

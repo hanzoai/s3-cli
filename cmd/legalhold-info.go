@@ -25,11 +25,11 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 var lhInfoFlags = []cli.Flag{
@@ -85,12 +85,12 @@ EXAMPLES:
 
 // Structured message depending on the type of console.
 type legalHoldInfoMessage struct {
-	LegalHold minio.LegalHoldStatus `json:"legalhold"`
-	URLPath   string                `json:"urlpath"`
-	Key       string                `json:"key"`
-	VersionID string                `json:"versionID"`
-	Status    string                `json:"status"`
-	Err       error                 `json:"error,omitempty"`
+	LegalHold s3.LegalHoldStatus `json:"legalhold"`
+	URLPath   string             `json:"urlpath"`
+	Key       string             `json:"key"`
+	VersionID string             `json:"versionID"`
+	Status    string             `json:"status"`
+	Err       error              `json:"error,omitempty"`
 }
 
 // Colorized message for console printing.
@@ -104,9 +104,9 @@ func (l legalHoldInfoMessage) String() string {
 	switch l.LegalHold {
 	case "":
 		legalhold = console.Colorize("LegalHoldNotSet", "Not set")
-	case minio.LegalHoldEnabled:
+	case s3.LegalHoldEnabled:
 		legalhold = console.Colorize("LegalHoldOn", l.LegalHold)
-	case minio.LegalHoldDisabled:
+	case s3.LegalHoldDisabled:
 		legalhold = console.Colorize("LegalHoldOff", l.LegalHold)
 	}
 

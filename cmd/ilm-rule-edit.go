@@ -20,13 +20,13 @@ package cmd
 import (
 	"context"
 
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/cmd/ilm"
-	"github.com/minio/mc/pkg/probe"
-	minio "github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/cmd/ilm"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/lifecycle"
 )
 
 var ilmEditCmd = cli.Command{
@@ -124,7 +124,7 @@ func mainILMEdit(cliCtx *cli.Context) error {
 	// Configuration that is already set.
 	lfcCfg, _, err := client.GetLifecycle(ctx)
 	if err != nil {
-		if e := err.ToGoError(); minio.ToErrorResponse(e).Code == "NoSuchLifecycleConfiguration" {
+		if e := err.ToGoError(); s3.ToErrorResponse(e).Code == "NoSuchLifecycleConfiguration" {
 			lfcCfg = lifecycle.NewConfiguration()
 		} else {
 			fatalIf(err.Trace(args...), "Unable to fetch lifecycle rules for "+urlStr)

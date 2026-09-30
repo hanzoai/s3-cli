@@ -26,10 +26,10 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 var anonymousFlags = []cli.Flag{
@@ -229,7 +229,7 @@ func checkAnonymousSyntax(ctx *cli.Context) {
 	}
 }
 
-// Convert an accessPerms to a string recognizable by minio-go
+// Convert an accessPerms to a string recognizable by the S3 client
 func accessPermToString(perm accessPerms) string {
 	anonymous := ""
 	switch perm {
@@ -290,7 +290,7 @@ func doSetAccessJSON(ctx context.Context, targetURL string, targetPERMS accessPe
 	return nil
 }
 
-// Convert a minio-go permission to accessPerms type
+// Convert a the S3 client permission to accessPerms type
 func stringToAccessPerm(perm string) accessPerms {
 	var anonymous accessPerms
 	switch perm {

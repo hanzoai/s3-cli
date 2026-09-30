@@ -25,7 +25,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/minio/minio-go/v7"
+	s3 "github.com/hanzos3/go"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -191,7 +191,7 @@ func (p *ParallelManager) enoughMemForUpload(uploadSize int64) bool {
 	}
 
 	estimateNeededMemoryForUpload := func(size int64) uint64 {
-		partsCount, partSize, _, e := minio.OptimalPartInfo(size, 0)
+		partsCount, partSize, _, e := s3.OptimalPartInfo(size, 0)
 		if e != nil {
 			panic(e)
 		}

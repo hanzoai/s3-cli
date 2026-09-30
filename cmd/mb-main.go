@@ -21,10 +21,10 @@ import (
 	"context"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 var mbFlags = []cli.Flag{
@@ -69,7 +69,7 @@ EXAMPLES:
      {{.Prompt}} {{.HelpName}} s3/mynewbucket
 
   2. Create a new bucket on Google Cloud Storage.
-     {{.Prompt}} {{.HelpName}} gcs/miniocloud
+     {{.Prompt}} {{.HelpName}} gcs/mycloud
 
   3. Create a new bucket on Amazon S3 cloud storage in region 'us-west-2'.
      {{.Prompt}} {{.HelpName}} --region=us-west-2 s3/myregionbucket

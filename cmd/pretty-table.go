@@ -20,7 +20,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/console"
 )
 
 // Field configuration: color theme and max content length

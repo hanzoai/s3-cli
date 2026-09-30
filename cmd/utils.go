@@ -33,13 +33,11 @@ import (
 	"strings"
 	"time"
 
+	s3 "github.com/hanzos3/go"
 	"github.com/mattn/go-ieproxy"
-	"github.com/minio/madmin-go/v3"
-	"github.com/minio/minio-go/v7"
 
-	jwtgo "github.com/golang-jwt/jwt/v4"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 func isErrIgnored(err *probe.Error) (ignored bool) {
@@ -53,7 +51,7 @@ func isErrIgnored(err *probe.Error) (ignored bool) {
 		ignored = true
 	case ObjectAlreadyExistsAsDirectory, BucketDoesNotExist, BucketInvalid:
 		ignored = true
-	case minio.ErrorResponse:
+	case s3.ErrorResponse:
 		ignored = strings.Contains(e.Error(), "The specified key does not exist")
 	default:
 		ignored = false
@@ -209,17 +207,17 @@ func isNewer(ti time.Time, newerRef string) bool {
 	return objectAge >= time.Duration(newerThan)
 }
 
-// getLookupType returns the minio.BucketLookupType for lookup
+// getLookupType returns the s3.BucketLookupType for lookup
 // option entered on the command line
-func getLookupType(l string) minio.BucketLookupType {
+func getLookupType(l string) s3.BucketLookupType {
 	l = strings.ToLower(l)
 	switch l {
 	case "off":
-		return minio.BucketLookupDNS
+		return s3.BucketLookupDNS
 	case "on":
-		return minio.BucketLookupPath
+		return s3.BucketLookupPath
 	}
-	return minio.BucketLookupAuto
+	return s3.BucketLookupAuto
 }
 
 // Return true if target url is a part of a source url such as:
@@ -335,12 +333,6 @@ func centerText(s string, w int) string {
 	return sb.String()
 }
 
-func getClient(aliasURL string) *madmin.AdminClient {
-	client, err := newAdminClient(aliasURL)
-	fatalIf(err, "Unable to initialize admin connection.")
-	return client
-}
-
 func httpClient(reqTimeout time.Duration) *http.Client {
 	return &http.Client{
 		Timeout: reqTimeout,
@@ -362,20 +354,6 @@ func httpClient(reqTimeout time.Duration) *http.Client {
 			ExpectContinueTimeout: 10 * time.Second,
 		},
 	}
-}
-
-func getPrometheusToken(hostConfig *aliasConfigV10) (string, error) {
-	jwt := jwtgo.NewWithClaims(jwtgo.SigningMethodHS512, jwtgo.RegisteredClaims{
-		ExpiresAt: jwtgo.NewNumericDate(UTCNow().Add(defaultPrometheusJWTExpiry)),
-		Subject:   hostConfig.AccessKey,
-		Issuer:    "prometheus",
-	})
-
-	token, e := jwt.SignedString([]byte(hostConfig.SecretKey))
-	if e != nil {
-		return "", e
-	}
-	return token, nil
 }
 
 // conservativeFileName returns a conservative file name

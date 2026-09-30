@@ -26,11 +26,11 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 var tagListFlags = []cli.Flag{
@@ -175,7 +175,7 @@ func showTags(ctx context.Context, clnt Client, versionID string) {
 
 	tagsMap, err := clnt.GetTags(ctx, versionID)
 	if err != nil {
-		if minio.ToErrorResponse(err.ToGoError()).Code == "NoSuchTagSet" {
+		if s3.ToErrorResponse(err.ToGoError()).Code == "NoSuchTagSet" {
 			fatalIf(probe.NewError(errors.New("check 'mc tag set --help' on how to set tags")), "No tags found  for "+targetName)
 		}
 		fatalIf(err, "Unable to fetch tags for "+targetName)

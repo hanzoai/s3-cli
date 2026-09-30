@@ -33,14 +33,14 @@ import (
 	"github.com/dustin/go-humanize"
 
 	"github.com/fatih/color"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/encrypt"
+	"github.com/hanzos3/go/pkg/notification"
 	metric "github.com/luxfi/metric"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/encrypt"
-	"github.com/minio/minio-go/v7/pkg/notification"
-	"github.com/minio/pkg/v3/console"
 )
 
 // mirror specific flags.
@@ -187,7 +187,7 @@ EXAMPLES:
       {{.Prompt}} {{.HelpName}} s3\documents\2014\ C:\backup\2014
 
   05. Mirror a bucket from aliased Amazon S3 cloud storage to a local folder use '--overwrite' to overwrite destination.
-      {{.Prompt}} {{.HelpName}} --overwrite s3/mycloud miniocloud-backup
+      {{.Prompt}} {{.HelpName}} --overwrite s3/mycloud mycloud-backup
 
   06. Mirror a bucket from Hanzo S3 cloud storage to a bucket on Amazon S3 cloud storage and remove any extraneous
       files on Amazon S3 cloud storage.
@@ -1090,9 +1090,9 @@ func runMirror(ctx context.Context, srcURL, dstURL string, cli *cli.Context, enc
 
 				var (
 					withLock bool
-					mode     minio.RetentionMode
+					mode     s3.RetentionMode
 					validity uint64
-					unit     minio.ValidityUnit
+					unit     s3.ValidityUnit
 					err      *probe.Error
 				)
 				if preserve && mirrorBucketsToBuckets {
@@ -1131,7 +1131,7 @@ func runMirror(ctx context.Context, srcURL, dstURL string, cli *cli.Context, enc
 						}
 						if err == nil {
 							mj.opts.md5 = true
-							mj.opts.checksum = minio.ChecksumNone
+							mj.opts.checksum = s3.ChecksumNone
 						}
 					}
 					errorIf(copyBucketPolicies(ctx, newSrcClt, newDstClt, isOverwrite),

@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/console"
 )
 
 // HTTPTracer provides callback hook mechanism for HTTP transport.

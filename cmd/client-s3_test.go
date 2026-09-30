@@ -26,7 +26,7 @@ import (
 	"net/http/httptest"
 	"strconv"
 
-	"github.com/minio/minio-go/v7"
+	s3 "github.com/hanzos3/go"
 	checkv1 "gopkg.in/check.v1"
 )
 
@@ -47,12 +47,12 @@ func (h bucketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/":
 			// Handler for incoming ListBuckets request.
-			response := []byte("<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\"><Buckets><Bucket><Name>bucket</Name><CreationDate>2015-05-20T23:05:09.230Z</CreationDate></Bucket></Buckets><Owner><ID>minio</ID><DisplayName>minio</DisplayName></Owner></ListAllMyBucketsResult>")
+			response := []byte("<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\"><Buckets><Bucket><Name>bucket</Name><CreationDate>2015-05-20T23:05:09.230Z</CreationDate></Bucket></Buckets><Owner><ID>s3user</ID><DisplayName>s3user</DisplayName></Owner></ListAllMyBucketsResult>")
 			w.Header().Set("Content-Length", strconv.Itoa(len(response)))
 			w.Write(response)
 		case "/bucket/":
 			// Handler for incoming ListObjects request.
-			response := []byte("<ListBucketResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\"><Contents><ETag>259d04a13802ae09c7e41be50ccc6baa</ETag><Key>object</Key><LastModified>2015-05-21T18:24:21.097Z</LastModified><Size>22061</Size><Owner><ID>minio</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Delimiter></Delimiter><EncodingType></EncodingType><IsTruncated>false</IsTruncated><Marker></Marker><MaxKeys>1000</MaxKeys><Name>testbucket</Name><NextMarker></NextMarker><Prefix></Prefix></ListBucketResult>")
+			response := []byte("<ListBucketResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\"><Contents><ETag>259d04a13802ae09c7e41be50ccc6baa</ETag><Key>object</Key><LastModified>2015-05-21T18:24:21.097Z</LastModified><Size>22061</Size><Owner><ID>s3user</ID><DisplayName>s3user</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Delimiter></Delimiter><EncodingType></EncodingType><IsTruncated>false</IsTruncated><Marker></Marker><MaxKeys>1000</MaxKeys><Name>testbucket</Name><NextMarker></NextMarker><Prefix></Prefix></ListBucketResult>")
 			w.Header().Set("Content-Length", strconv.Itoa(len(response)))
 			w.Write(response)
 		}
@@ -178,7 +178,7 @@ func (h stsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			response := []byte("<AssumeRoleWithWebIdentityResponse xmlns=\"https://sts.amazonaws.com/doc/2011-06-15/\"><AssumeRoleWithWebIdentityResult><AssumedRoleUser><Arn></Arn><AssumeRoleId></AssumeRoleId></AssumedRoleUser><Credentials><AccessKeyId>7NL5BR739GUQ0ZOD4JNB</AccessKeyId><SecretAccessKey>A2mxZSxPnHNhSduedUHczsXZpVSSssOLpDruUmTV</SecretAccessKey><Expiration>0001-01-01T00:00:00Z</Expiration><SessionToken>eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NLZXkiOiI3Tkw1QlI3MzlHVVEwWk9ENEpOQiIsImV4cCI6MTY5OTYwMzMwNiwicGFyZW50IjoibWluaW8iLCJzZXNzaW9uUG9saWN5IjoiZXlKV1pYSnphVzl1SWpvaU1qQXhNaTB4TUMweE55SXNJbE4wWVhSbGJXVnVkQ0k2VzNzaVJXWm1aV04wSWpvaVFXeHNiM2NpTENKQlkzUnBiMjRpT2xzaVlXUnRhVzQ2S2lKZGZTeDdJa1ZtWm1WamRDSTZJa0ZzYkc5M0lpd2lRV04wYVc5dUlqcGJJbXR0Y3pvcUlsMTlMSHNpUldabVpXTjBJam9pUVd4c2IzY2lMQ0pCWTNScGIyNGlPbHNpY3pNNktpSmRMQ0pTWlhOdmRYSmpaU0k2V3lKaGNtNDZZWGR6T25Nek9qbzZLaUpkZlYxOSJ9.uuE_x7PO8QoPfUk9KzUELoAqxihIknZAvJLl5aYJjwpSjJYFTPLp6EvuyJX2hc18s9HzeiJ-vU0dPzsy50dXmg</SessionToken></Credentials></AssumeRoleWithWebIdentityResult><ResponseMetadata></ResponseMetadata></AssumeRoleWithWebIdentityResponse>")
 			w.Header().Set("Content-Length", strconv.Itoa(len(response)))
 			w.Header().Set("Content-Type", "application/xml")
-			w.Header().Set("Server", "MinIO")
+			w.Header().Set("Server", "Hanzo S3")
 			w.Write(response)
 			return
 		}
@@ -277,17 +277,17 @@ func (s *TestSuite) TestObjectOperations(c *checkv1.C) {
 var testSelectCompressionTypeCases = []struct {
 	opts            SelectObjectOpts
 	object          string
-	compressionType minio.SelectCompressionType
+	compressionType s3.SelectCompressionType
 }{
-	{SelectObjectOpts{CompressionType: minio.SelectCompressionNONE}, "a.gzip", minio.SelectCompressionNONE},
-	{SelectObjectOpts{CompressionType: minio.SelectCompressionBZIP}, "a.gz", minio.SelectCompressionBZIP},
-	{SelectObjectOpts{}, "t.parquet", minio.SelectCompressionNONE},
-	{SelectObjectOpts{}, "x.csv.gz", minio.SelectCompressionGZIP},
-	{SelectObjectOpts{}, "x.json.bz2", minio.SelectCompressionBZIP},
-	{SelectObjectOpts{}, "b.gz", minio.SelectCompressionGZIP},
-	{SelectObjectOpts{}, "k.bz2", minio.SelectCompressionBZIP},
-	{SelectObjectOpts{}, "a.csv", minio.SelectCompressionNONE},
-	{SelectObjectOpts{}, "a.json", minio.SelectCompressionNONE},
+	{SelectObjectOpts{CompressionType: s3.SelectCompressionNONE}, "a.gzip", s3.SelectCompressionNONE},
+	{SelectObjectOpts{CompressionType: s3.SelectCompressionBZIP}, "a.gz", s3.SelectCompressionBZIP},
+	{SelectObjectOpts{}, "t.parquet", s3.SelectCompressionNONE},
+	{SelectObjectOpts{}, "x.csv.gz", s3.SelectCompressionGZIP},
+	{SelectObjectOpts{}, "x.json.bz2", s3.SelectCompressionBZIP},
+	{SelectObjectOpts{}, "b.gz", s3.SelectCompressionGZIP},
+	{SelectObjectOpts{}, "k.bz2", s3.SelectCompressionBZIP},
+	{SelectObjectOpts{}, "a.csv", s3.SelectCompressionNONE},
+	{SelectObjectOpts{}, "a.json", s3.SelectCompressionNONE},
 }
 
 // TestSelectCompressionType - tests compression type returned

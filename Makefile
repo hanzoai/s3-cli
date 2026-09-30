@@ -30,7 +30,7 @@ docker: build
 
 vet:
 	@echo "Running $@"
-	@GO111MODULE=on go vet github.com/minio/mc/...
+	@GO111MODULE=on go vet github.com/hanzoai/s3-cli/...
 
 lint-fix: getdeps ## runs golangci-lint suite of linters with automatic fixes
 	@echo "Running $@ check"
@@ -76,7 +76,7 @@ hotfix: hotfix-vars install ## builds s3 binary with hotfix tags
 	@sha256sum < ./s3.$(VERSION) | sed 's, -,s3.$(VERSION),g' > s3.$(VERSION).sha256sum
 
 hotfix-push: hotfix
-	@scp -q -r s3.$(VERSION)* minio@s3.hanzo.ai:~/releases/client/s3/hotfixes/$(TARGET_GOOS)-$(TARGET_GOARCH)/archive/
+	@scp -q -r s3.$(VERSION)* s3@s3.hanzo.ai:~/releases/client/s3/hotfixes/$(TARGET_GOOS)-$(TARGET_GOARCH)/archive/
 	@echo "Published new hotfix binaries at https://s3.hanzo.ai/client/s3/hotfixes/$(TARGET_GOOS)-$(TARGET_GOARCH)/archive/s3.$(VERSION)"
 
 docker-hotfix-push: docker-hotfix

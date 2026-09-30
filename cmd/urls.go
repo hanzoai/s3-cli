@@ -18,8 +18,8 @@
 package cmd
 
 import (
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 // URLs contains source and target urls
@@ -32,7 +32,7 @@ type URLs struct {
 	TotalSize        int64
 	MD5              bool
 	DisableMultipart bool
-	checksum         minio.ChecksumType
+	checksum         s3.ChecksumType
 	encKeyDB         map[string][]prefixSSEPair
 	Error            *probe.Error `json:"-"`
 	ErrorCond        differType   `json:"-"`

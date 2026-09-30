@@ -22,9 +22,9 @@ import (
 	"maps"
 	"strings"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
-	"github.com/minio/pkg/v3/quick"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/quick"
 )
 
 // migrate config files from the any older version to the latest.

@@ -1,11 +1,11 @@
-project_name: mc
+project_name: s3-cli
 
 release:
    name_template: "Version {{.Version}}"
    disable: true
    github:
-    owner: minio
-    name: mc
+    owner: hanzoai
+    name: s3-cli
 
 env:
   - CGO_ENABLED=0
@@ -67,7 +67,7 @@ builds:
       - -trimpath
 
     ldflags:
-      - "-s -w -X github.com/minio/mc/cmd.Version={{.Version}} -X github.com/minio/mc/cmd.ReleaseTag={{.Tag}} -X github.com/minio/mc/cmd.CommitID={{.FullCommit}} -X github.com/minio/mc/cmd.ShortCommitID={{.ShortCommit}}"
+      - "-s -w -X github.com/hanzoai/s3-cli/cmd.Version={{.Version}} -X github.com/hanzoai/s3-cli/cmd.ReleaseTag={{.Tag}} -X github.com/hanzoai/s3-cli/cmd.CommitID={{.FullCommit}} -X github.com/hanzoai/s3-cli/cmd.ShortCommitID={{.ShortCommit}}"
 
 archives:
   -
@@ -76,12 +76,12 @@ archives:
 
 nfpms:
   -
-    id: minio
-    package_name: mc
-    vendor: MinIO, Inc.
-    homepage: https://min.io/
-    maintainer: dev@min.io
-    description: MinIO Client (mc) provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff, find etc. It supports filesystems and Amazon S3 compatible cloud storage service (AWS Signature v2 and v4).
+    id: s3
+    package_name: s3-cli
+    vendor: Hanzo AI, Inc.
+    homepage: https://hanzo.ai/
+    maintainer: dev@hanzo.ai
+    description: The Hanzo S3 client provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff, find etc. It supports filesystems and Amazon S3 compatible cloud storage service (AWS Signature v2 and v4).
     license: Apache 2.0
     bindir: /usr/bin
     formats:
@@ -133,22 +133,22 @@ dockers:
     goarch: amd64
     dockerfile: Dockerfile.release
     image_templates:
-      - minio/mc:{{ .Tag }}
-      - minio/mc:latest
+      - ghcr.io/hanzoai/s3-cli:{{ .Tag }}
+      - ghcr.io/hanzoai/s3-cli:latest
 
   -
     goos: linux
     goarch: ppc64le
     dockerfile: Dockerfile.ppc64le.release
     image_templates:
-      - minio/mc:{{ .Tag }}-ppc64le
+      - ghcr.io/hanzoai/s3-cli:{{ .Tag }}-ppc64le
 
   -
     goos: linux
     goarch: s390x
     dockerfile: Dockerfile.s390x.release
     image_templates:
-      - minio/mc:{{ .Tag }}-s390x
+      - ghcr.io/hanzoai/s3-cli:{{ .Tag }}-s390x
 
   -
     goos: linux
@@ -156,7 +156,7 @@ dockers:
     goarm: ''
     dockerfile: Dockerfile.arm64.release
     image_templates:
-      - minio/mc:{{ .Tag }}-arm64
+      - ghcr.io/hanzoai/s3-cli:{{ .Tag }}-arm64
 
   -
     goos: linux
@@ -164,4 +164,4 @@ dockers:
     goarm: '7'
     dockerfile: Dockerfile.arm.release
     image_templates:
-      - minio/mc:{{ .Tag }}-arm
+      - ghcr.io/hanzoai/s3-cli:{{ .Tag }}-arm

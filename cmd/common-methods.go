@@ -34,11 +34,11 @@ import (
 	"golang.org/x/net/http/httpguts"
 
 	"github.com/dustin/go-humanize"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/encrypt"
-	"github.com/minio/minio-go/v7/pkg/tags"
-	"github.com/minio/pkg/v3/env"
+	"github.com/hanzoai/s3-cli/pkg/env"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/encrypt"
+	"github.com/hanzos3/go/pkg/tags"
 )
 
 // Check if the passed URL represents a folder. It may or may not exist yet.
@@ -170,9 +170,9 @@ func putTargetRetention(ctx context.Context, alias, urlStr string, metadata map[
 		return err.Trace(alias, urlStr)
 	}
 	lockModeStr, ok := metadata[AmzObjectLockMode]
-	lockMode := minio.RetentionMode("")
+	lockMode := s3.RetentionMode("")
 	if ok {
-		lockMode = minio.RetentionMode(lockModeStr)
+		lockMode = s3.RetentionMode(lockModeStr)
 		delete(metadata, AmzObjectLockMode)
 	}
 
@@ -312,13 +312,13 @@ func uploadSourceToTargetURL(ctx context.Context, uploadOpts uploadSourceToTarge
 	// to override defaults from source, usually happens in `cp` command.
 	// for the most part source metadata is copied over.
 	if uploadOpts.urls.TargetContent.RetentionEnabled {
-		m := minio.RetentionMode(strings.ToUpper(uploadOpts.urls.TargetContent.RetentionMode))
+		m := s3.RetentionMode(strings.ToUpper(uploadOpts.urls.TargetContent.RetentionMode))
 		if !m.IsValid() {
 			return uploadOpts.urls.WithError(probe.NewError(errors.New("invalid retention mode")).Trace(targetURL.String()))
 		}
 
 		var dur uint64
-		var unit minio.ValidityUnit
+		var unit s3.ValidityUnit
 		dur, unit, err = parseRetentionValidity(uploadOpts.urls.TargetContent.RetentionDuration)
 		if err != nil {
 			return uploadOpts.urls.WithError(err.Trace(targetURL.String()))
@@ -336,9 +336,9 @@ func uploadSourceToTargetURL(ctx context.Context, uploadOpts uploadSourceToTarge
 	// to override defaults from source, usually happens in `cp` command.
 	// for the most part source metadata is copied over.
 	if uploadOpts.urls.TargetContent.LegalHoldEnabled {
-		switch minio.LegalHoldStatus(uploadOpts.urls.TargetContent.LegalHold) {
-		case minio.LegalHoldDisabled:
-		case minio.LegalHoldEnabled:
+		switch s3.LegalHoldStatus(uploadOpts.urls.TargetContent.LegalHold) {
+		case s3.LegalHoldDisabled:
+		case s3.LegalHoldEnabled:
 		default:
 			return uploadOpts.urls.WithError(errInvalidArgument().Trace(uploadOpts.urls.TargetContent.LegalHold))
 		}

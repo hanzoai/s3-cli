@@ -25,9 +25,9 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	s3 "github.com/hanzos3/go"
 )
 
 var lhSetFlags = []cli.Flag{
@@ -82,7 +82,7 @@ EXAMPLES:
 }
 
 // setLegalHold - Set legalhold for all objects within a given prefix.
-func setLegalHold(ctx context.Context, urlStr, versionID string, timeRef time.Time, withVersions, recursive bool, lhold minio.LegalHoldStatus) error {
+func setLegalHold(ctx context.Context, urlStr, versionID string, timeRef time.Time, withVersions, recursive bool, lhold s3.LegalHoldStatus) error {
 	clnt, err := newClient(urlStr)
 	if err != nil {
 		fatalIf(err.Trace(), "Unable to parse the provided url.")
@@ -217,5 +217,5 @@ func mainLegalHoldSet(cliCtx *cli.Context) error {
 		fatalIf(errDummy().Trace(), "Bucket lock needs to be enabled in order to use this feature.")
 	}
 
-	return setLegalHold(ctx, targetURL, versionID, timeRef, withVersions, recursive, minio.LegalHoldEnabled)
+	return setLegalHold(ctx, targetURL, versionID, timeRef, withVersions, recursive, s3.LegalHoldEnabled)
 }

@@ -33,13 +33,13 @@ import (
 
 	"github.com/dustin/go-humanize"
 	"github.com/google/shlex"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 	"golang.org/x/text/unicode/norm"
 
 	// golang does not support flat keys for path matching, find does
-	"github.com/minio/pkg/v3/wildcard"
+	"github.com/hanzoai/s3-cli/pkg/wildcard"
 )
 
 // findMessage holds JSON and string values for printing find command output.

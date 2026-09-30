@@ -27,11 +27,11 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 // cp command flags.
@@ -337,7 +337,7 @@ func doCopySession(ctx context.Context, cancelCopy context.CancelFunc, cli *cli.
 	md5, checksum := parseChecksum(cli)
 	if withLock {
 		// The Content-MD5 header is required for any request to upload an object with a retention period configured using Amazon S3 Object Lock.
-		md5, checksum = true, minio.ChecksumNone
+		md5, checksum = true, s3.ChecksumNone
 	}
 
 	go func() {

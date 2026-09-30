@@ -21,8 +21,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 // prepareGetURLs - prepares target and source clientURLs for copying.
@@ -91,7 +91,7 @@ func guessGetURLType(ctx context.Context, o prepareCopyURLsOpts) (*copyURLsConte
 		if path == "" {
 			return cc, probe.NewError(fmt.Errorf("Please set a full path for s3 resource."))
 		}
-		cc.sourceContent = s3clnt.objectInfo2ClientContent(bucket, minio.ObjectInfo{
+		cc.sourceContent = s3clnt.objectInfo2ClientContent(bucket, s3.ObjectInfo{
 			Key: path, VersionID: o.versionID,
 		})
 

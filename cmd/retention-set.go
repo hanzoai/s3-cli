@@ -23,10 +23,10 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	minio "github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 var retentionSetFlags = []cli.Flag{
@@ -93,13 +93,13 @@ EXAMPLES:
 `,
 }
 
-func parseSetRetentionArgs(cliCtx *cli.Context) (target, versionID string, recursive bool, timeRef time.Time, withVersions bool, mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit, bypass, bucketMode bool) {
+func parseSetRetentionArgs(cliCtx *cli.Context) (target, versionID string, recursive bool, timeRef time.Time, withVersions bool, mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit, bypass, bucketMode bool) {
 	args := cliCtx.Args()
 	if len(args) != 3 {
 		showCommandHelpAndExit(cliCtx, 1)
 	}
 
-	mode = minio.RetentionMode(strings.ToUpper(args[0]))
+	mode = s3.RetentionMode(strings.ToUpper(args[0]))
 	if !mode.IsValid() {
 		fatalIf(errInvalidArgument().Trace(args...), "invalid retention mode '%v'", mode)
 	}
@@ -129,12 +129,12 @@ func parseSetRetentionArgs(cliCtx *cli.Context) (target, versionID string, recur
 
 // Set Retention for one object/version or many objects within a given prefix.
 func setRetention(ctx context.Context, target, versionID string, timeRef time.Time, withVersions, isRecursive bool,
-	mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit, bypassGovernance bool,
+	mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit, bypassGovernance bool,
 ) error {
 	return applyRetention(ctx, lockOpSet, target, versionID, timeRef, withVersions, isRecursive, mode, validity, unit, bypassGovernance)
 }
 
-func setBucketLock(urlStr string, mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit) error {
+func setBucketLock(urlStr string, mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit) error {
 	return applyBucketLock(lockOpSet, urlStr, mode, validity, unit)
 }
 

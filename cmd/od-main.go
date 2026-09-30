@@ -23,11 +23,11 @@ import (
 	"strings"
 	"time"
 
-	json "github.com/minio/colorjson"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
 
 	humanize "github.com/dustin/go-humanize"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 // make a bucket.

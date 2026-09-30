@@ -37,12 +37,12 @@ import (
 	_ "crypto/sha256" // needed for selfupdate hashers
 
 	"github.com/fatih/color"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/env"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/selfupdate"
 	"github.com/mattn/go-isatty"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/env"
-	"github.com/minio/selfupdate"
 )
 
 // Check for new software updates.
@@ -194,7 +194,7 @@ func IsSourceBuild() bool {
 //	mc (<OS>; <ARCH>[; dcos][; kubernetes][; docker][; source]) mc/<VERSION> mc/<RELEASE-TAG> mc/<COMMIT-ID>
 //
 // Any change here should be discussed by opening an issue at
-// https://github.com/minio/mc/issues.
+// https://github.com/hanzoai/s3-cli/issues.
 func getUserAgent() string {
 	userAgentParts := []string{}
 	// Helper function to concisely append a pair of strings to a

@@ -20,13 +20,13 @@ package cmd
 import (
 	"context"
 
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/cmd/ilm"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/cmd/ilm"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/lifecycle"
 )
 
 var ilmAddCmd = cli.Command{
@@ -50,13 +50,13 @@ DESCRIPTION:
 
 EXAMPLES:
   1. Add a lifecycle rule with a transition and a noncurrent version transition action for objects with prefix doc/ whose size is greater than 1MiB in mybucket.
-     Tiers must exist in MinIO. Use existing tiers or add new tiers.
+     Tiers must exist in Hanzo S3. Use existing tiers or add new tiers.
 
-     {{.Prompt}} mc ilm tier add minio mys3 MINIOTIER-1 --endpoint https://warm-minio-1.com \
+     {{.Prompt}} mc ilm tier add s3 mys3 WARMTIER-1 --endpoint https://warm-s3-1.com \
          --access-key ACCESSKEY --secret-key SECRETKEY --bucket bucket1 --prefix prefix1
 
-     {{.Prompt}} {{.HelpName}} --prefix "doc/" --size-gt 1MiB --transition-days "90" --transition-tier "MINIOTIER-1" \
-         --noncurrent-transition-days "45" --noncurrent-transition-tier "MINIOTIER-1" \
+     {{.Prompt}} {{.HelpName}} --prefix "doc/" --size-gt 1MiB --transition-days "90" --transition-tier "WARMTIER-1" \
+         --noncurrent-transition-days "45" --noncurrent-transition-tier "WARMTIER-1" \
          mys3/mybucket/
 
   2. Add a lifecycle rule with an expiration action for all objects in mybucket.
@@ -227,7 +227,7 @@ func mainILMAdd(cliCtx *cli.Context) error {
 	// Configuration that is already set.
 	lfcCfg, _, err := client.GetLifecycle(ctx)
 	if err != nil {
-		if e := err.ToGoError(); minio.ToErrorResponse(e).Code == "NoSuchLifecycleConfiguration" {
+		if e := err.ToGoError(); s3.ToErrorResponse(e).Code == "NoSuchLifecycleConfiguration" {
 			lfcCfg = lifecycle.NewConfiguration()
 		} else {
 			fatalIf(err.Trace(args...), "Unable to fetch lifecycle rules for "+urlStr)

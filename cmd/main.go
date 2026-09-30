@@ -33,15 +33,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/env"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/trie"
+	"github.com/hanzoai/s3-cli/pkg/words"
+	"github.com/hanzos3/go/pkg/set"
 	"github.com/inconshreveable/mousetrap"
-	"github.com/minio/cli"
-	"github.com/minio/madmin-go/v3"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7/pkg/set"
-	"github.com/minio/pkg/v3/console"
-	"github.com/minio/pkg/v3/env"
-	"github.com/minio/pkg/v3/trie"
-	"github.com/minio/pkg/v3/words"
 	"golang.org/x/term"
 
 	completeinstall "github.com/posener/complete/cmd/install"
@@ -416,9 +415,7 @@ func checkUpdate(ctx *cli.Context) {
 
 var appCmds = []cli.Command{
 	aliasCmd,
-	adminCmd,
 	anonymousCmd,
-	batchCmd,
 	cpCmd,
 	catCmd,
 	corsCmd,
@@ -430,27 +427,20 @@ var appCmds = []cli.Command{
 	getCmd,
 	headCmd,
 	ilmCmd,
-	idpCmd,
-	licenseCmd,
 	legalHoldCmd,
 	lsCmd,
 	mbCmd,
 	mvCmd,
 	mirrorCmd,
 	odCmd,
-	pingCmd,
 	policyCmd,
 	pipeCmd,
 	putCmd,
-	quotaCmd,
 	rmCmd,
 	retentionCmd,
 	rbCmd,
-	replicateCmd,
-	readyCmd,
 	sqlCmd,
 	statCmd,
-	supportCmd,
 	shareCmd,
 	treeCmd,
 	tagCmd,
@@ -479,10 +469,7 @@ func registerApp(name string) *cli.App {
 	app := cli.NewApp()
 	app.Name = name
 	app.Action = func(ctx *cli.Context) error {
-		mcEnable := env.Get("MC_UPDATE", madmin.EnableOn)
-		minioEnable := env.Get("S3_UPDATE", madmin.EnableOn)
-
-		if strings.HasPrefix(ReleaseTag, "RELEASE.") && (mcEnable == madmin.EnableOn || minioEnable == madmin.EnableOn) {
+		if strings.HasPrefix(ReleaseTag, "RELEASE.") && env.Get("S3_UPDATE", "on") == "on" {
 			// Check for new updates from s3.hanzo.ai.
 			checkUpdate(ctx)
 		}

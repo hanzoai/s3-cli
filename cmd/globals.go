@@ -33,9 +33,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/dustin/go-humanize"
-	"github.com/minio/cli"
-	"github.com/minio/madmin-go/v3"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
 	"github.com/muesli/termenv"
 	"golang.org/x/net/http/httpguts"
 )
@@ -69,15 +68,14 @@ const (
 )
 
 var (
-	globalQuiet        = false               // Quiet flag set via command line
-	globalJSON         = false               // Json flag set via command line
-	globalJSONLine     = false               // Print json as single line.
-	globalDebug        = false               // Debug flag set via command line
-	globalNoColor      = false               // No Color flag set via command line
-	globalInsecure     = false               // Insecure flag set via command line
-	globalResolvers    map[string]netip.Addr // Custom mappings from HOST[:PORT] to IP
-	globalAirgapped    = false               // Airgapped flag set via command line
-	globalSubnetConfig []madmin.SubsysConfig // Subnet config
+	globalQuiet     = false               // Quiet flag set via command line
+	globalJSON      = false               // Json flag set via command line
+	globalJSONLine  = false               // Print json as single line.
+	globalDebug     = false               // Debug flag set via command line
+	globalNoColor   = false               // No Color flag set via command line
+	globalInsecure  = false               // Insecure flag set via command line
+	globalResolvers map[string]netip.Addr // Custom mappings from HOST[:PORT] to IP
+	globalAirgapped = false               // Airgapped flag set via command line
 
 	// GlobalDevMode is set to true if the program is running in development mode
 	GlobalDevMode = false

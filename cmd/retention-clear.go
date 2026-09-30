@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	s3 "github.com/hanzos3/go"
 )
 
 var retentionClearFlags = []cli.Flag{
@@ -115,7 +115,7 @@ func parseClearRetentionArgs(cliCtx *cli.Context) (target, versionID string, tim
 
 // Clear Retention for one object/version or many objects within a given prefix, bypass governance is always enabled
 func clearRetention(ctx context.Context, target, versionID string, timeRef time.Time, withVersions, isRecursive bool) error {
-	return applyRetention(ctx, lockOpClear, target, versionID, timeRef, withVersions, isRecursive, "", 0, minio.Days, true)
+	return applyRetention(ctx, lockOpClear, target, versionID, timeRef, withVersions, isRecursive, "", 0, s3.Days, true)
 }
 
 func clearBucketLock(urlStr string) error {

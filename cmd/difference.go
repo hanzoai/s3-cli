@@ -25,8 +25,8 @@ import (
 
 	// golang does not support flat keys for path matching, find does
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -407,7 +407,7 @@ func difference(sourceURL string, sourceCh <-chan *ClientContent, targetURL stri
 					Error: err,
 				}
 				return
-			case minio.ErrorResponse:
+			case s3.ErrorResponse:
 				switch v.Code {
 				case "NoSuchBucket", "NoSuchKey", "SignatureDoesNotMatch":
 					diffCh <- diffMessage{

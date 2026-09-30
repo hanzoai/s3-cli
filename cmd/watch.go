@@ -22,8 +22,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7/pkg/notification"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzos3/go/pkg/notification"
 )
 
 // EventInfo contains the information of the event that occurred and the source

@@ -14,9 +14,7 @@ The storage server is at [github.com/hanzoai/s3](https://github.com/hanzoai/s3).
 
 ```
   alias      manage server credentials in configuration file
-  admin      manage Hanzo S3 servers
   anonymous  manage anonymous access to buckets and objects
-  batch      manage batch jobs
   cp         copy objects
   cat        display object contents
   diff       list differences in object name, size, and date between two buckets
@@ -27,26 +25,19 @@ The storage server is at [github.com/hanzoai/s3](https://github.com/hanzoai/s3).
   get        get s3 object to local
   head       display first 'n' lines of an object
   ilm        manage bucket lifecycle
-  idp        manage Hanzo S3 IDentity Provider server configuration
-  license    license related commands
   legalhold  manage legal hold for object(s)
   ls         list buckets and objects
   mb         make a bucket
   mv         move objects
   mirror     synchronize object(s) to a remote site
   od         measure single stream upload and download
-  ping       perform liveness check
   pipe       stream STDIN to an object
   put        upload an object to a bucket
-  quota      manage bucket quota
   rm         remove object(s)
   retention  set retention for object(s)
   rb         remove a bucket
-  replicate  configure server side bucket replication
-  ready      checks if the cluster is ready or not
   sql        run sql queries on objects
   stat       show object metadata
-  support    support related commands
   share      generate URL for temporary access to an object
   tree       list buckets and objects in a tree format
   tag        manage tags for bucket and object(s)

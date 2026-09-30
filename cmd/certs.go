@@ -21,8 +21,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/certs"
+	"github.com/hanzoai/s3-cli/pkg/certs"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 // getCertsDir - return the full path of certs dir

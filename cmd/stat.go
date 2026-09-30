@@ -28,33 +28,32 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-	json "github.com/minio/colorjson"
-	"github.com/minio/madmin-go/v3"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/minio/minio-go/v7/pkg/notification"
-	"github.com/minio/minio-go/v7/pkg/replication"
-	"github.com/minio/pkg/v3/console"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/lifecycle"
+	"github.com/hanzos3/go/pkg/notification"
+	"github.com/hanzos3/go/pkg/replication"
 )
 
 // contentMessage container for content message structure.
 type statMessage struct {
-	Status            string             `json:"status"`
-	Key               string             `json:"name"`
-	Date              time.Time          `json:"lastModified"`
-	Size              int64              `json:"size"`
-	ETag              string             `json:"etag"`
-	Type              string             `json:"type,omitempty"`
-	Expires           *time.Time         `json:"expires,omitempty"`
-	Expiration        *time.Time         `json:"expiration,omitempty"`
-	ExpirationRuleID  string             `json:"expirationRuleID,omitempty"`
-	ReplicationStatus string             `json:"replicationStatus,omitempty"`
-	Metadata          map[string]string  `json:"metadata,omitempty"`
-	VersionID         string             `json:"versionID,omitempty"`
-	DeleteMarker      bool               `json:"deleteMarker,omitempty"`
-	Restore           *minio.RestoreInfo `json:"restore,omitempty"`
-	Checksum          map[string]string  `json:"checksum,omitempty"`
+	Status            string            `json:"status"`
+	Key               string            `json:"name"`
+	Date              time.Time         `json:"lastModified"`
+	Size              int64             `json:"size"`
+	ETag              string            `json:"etag"`
+	Type              string            `json:"type,omitempty"`
+	Expires           *time.Time        `json:"expires,omitempty"`
+	Expiration        *time.Time        `json:"expiration,omitempty"`
+	ExpirationRuleID  string            `json:"expirationRuleID,omitempty"`
+	ReplicationStatus string            `json:"replicationStatus,omitempty"`
+	Metadata          map[string]string `json:"metadata,omitempty"`
+	VersionID         string            `json:"versionID,omitempty"`
+	DeleteMarker      bool              `json:"deleteMarker,omitempty"`
+	Restore           *s3.RestoreInfo   `json:"restore,omitempty"`
+	Checksum          map[string]string `json:"checksum,omitempty"`
 }
 
 func (stat statMessage) String() (msg string) {
@@ -263,17 +262,6 @@ func statURL(ctx context.Context, targetURL, versionID string, timeRef time.Time
 				bstat.Date = time.Now()
 			}
 
-			var bu madmin.BucketUsageInfo
-
-			adminClient, _ := newAdminClient(targetURL)
-			if adminClient != nil {
-				// Create a new Hanzo S3 Admin Client
-				duinfo, e := adminClient.DataUsageInfo(ctx)
-				if e == nil {
-					bu = duinfo.BucketsUsage[bstat.Key]
-				}
-			}
-
 			if prefixPath != "/" {
 				bstat.Prefix = true
 			}
@@ -281,7 +269,6 @@ func statURL(ctx context.Context, targetURL, versionID string, timeRef time.Time
 			printMsg(bucketInfoMessage{
 				Status:     "success",
 				BucketInfo: bstat,
-				Usage:      bu,
 			})
 
 			return nil
@@ -384,9 +371,9 @@ type BucketInfo struct {
 		KeyID     string `json:"keyId,omitempty"`
 	} `json:"Encryption,omitempty"`
 	Locking struct {
-		Enabled  string              `json:"enabled"`
-		Mode     minio.RetentionMode `json:"mode"`
-		Validity string              `json:"validity"`
+		Enabled  string           `json:"enabled"`
+		Mode     s3.RetentionMode `json:"mode"`
+		Validity string           `json:"validity"`
 	} `json:"ObjectLock,omitempty"`
 	Replication struct {
 		Enabled bool               `json:"enabled"`
@@ -428,7 +415,6 @@ func (i BucketInfo) Tags() string {
 type bucketInfoMessage struct {
 	Status string `json:"status"`
 	BucketInfo
-	Usage madmin.BucketUsageInfo
 }
 
 func (v bucketInfoMessage) JSON() string {
@@ -480,36 +466,6 @@ func (v bucketInfoMessage) String() string {
 		fmt.Fprint(&b, console.Colorize("Title", "Properties:\n"))
 		fmt.Fprint(&b, prettyPrintBucketMetadata(v.BucketInfo))
 		fmt.Fprintf(&b, "\n")
-	}
-
-	fmt.Fprint(&b, console.Colorize("Title", "Usage:\n"))
-
-	fmt.Fprintf(&b, "%16s: %s\n", "Total size", console.Colorize("Count", humanize.IBytes(v.Usage.Size)))
-	fmt.Fprintf(&b, "%16s: %s\n", "Objects count", console.Colorize("Count", humanize.Comma(int64(v.Usage.ObjectsCount))))
-	fmt.Fprintf(&b, "%16s: %s\n", "Versions count", console.Colorize("Count", humanize.Comma(int64(v.Usage.VersionsCount))))
-	fmt.Fprintf(&b, "\n")
-
-	if len(v.Usage.ObjectSizesHistogram) > 0 {
-		fmt.Fprint(&b, console.Colorize("Title", "Object sizes histogram:\n"))
-
-		var maxDigits uint
-		for _, val := range v.Usage.ObjectSizesHistogram {
-			if d := countDigits(val); d > maxDigits {
-				maxDigits = d
-			}
-		}
-
-		var sortedTags []string
-		for k := range v.Usage.ObjectSizesHistogram {
-			sortedTags = append(sortedTags, k)
-		}
-		sort.Strings(sortedTags)
-		for _, tagName := range sortedTags {
-			val, ok := v.Usage.ObjectSizesHistogram[tagName]
-			if ok {
-				fmt.Fprintf(&b, "   %*d object(s) %s\n", maxDigits, val, tagName)
-			}
-		}
 	}
 
 	return b.String()

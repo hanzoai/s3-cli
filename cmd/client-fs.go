@@ -38,17 +38,17 @@ import (
 	"github.com/pkg/xattr"
 	"github.com/rjeczalik/notify"
 
-	xfilepath "github.com/minio/filepath"
-	"github.com/minio/mc/pkg/disk"
-	"github.com/minio/mc/pkg/hookreader"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/cors"
-	"github.com/minio/minio-go/v7/pkg/encrypt"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/minio/minio-go/v7/pkg/notification"
-	"github.com/minio/minio-go/v7/pkg/replication"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/disk"
+	xfilepath "github.com/hanzoai/s3-cli/pkg/filepath"
+	"github.com/hanzoai/s3-cli/pkg/hookreader"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/cors"
+	"github.com/hanzos3/go/pkg/encrypt"
+	"github.com/hanzos3/go/pkg/lifecycle"
+	"github.com/hanzos3/go/pkg/notification"
+	"github.com/hanzos3/go/pkg/replication"
 )
 
 // filesystem client
@@ -57,7 +57,7 @@ type fsClient struct {
 }
 
 const (
-	partSuffix       = ".part.minio"
+	partSuffix       = ".part.s3"
 	slashSeperator   = "/"
 	metadataKey      = "X-Amz-Meta-Mc-Attrs"
 	metadataKeyS3Cmd = "X-Amz-Meta-S3cmd-Attrs"
@@ -1221,7 +1221,7 @@ func (f *fsClient) RemoveBucket(_ context.Context, forceRemove bool) *probe.Erro
 }
 
 // Set object lock configuration of bucket.
-func (f *fsClient) SetObjectLockConfig(_ context.Context, _ minio.RetentionMode, _ uint64, _ minio.ValidityUnit) *probe.Error {
+func (f *fsClient) SetObjectLockConfig(_ context.Context, _ s3.RetentionMode, _ uint64, _ s3.ValidityUnit) *probe.Error {
 	return probe.NewError(APINotImplemented{
 		API:     "SetObjectLockConfig",
 		APIType: "filesystem",
@@ -1229,7 +1229,7 @@ func (f *fsClient) SetObjectLockConfig(_ context.Context, _ minio.RetentionMode,
 }
 
 // Get object lock configuration of bucket.
-func (f *fsClient) GetObjectLockConfig(_ context.Context) (status string, mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit, err *probe.Error) {
+func (f *fsClient) GetObjectLockConfig(_ context.Context) (status string, mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit, err *probe.Error) {
 	return "", "", 0, "", probe.NewError(APINotImplemented{
 		API:     "GetObjectLockConfig",
 		APIType: "filesystem",
@@ -1245,14 +1245,14 @@ func (f *fsClient) GetAccessRules(_ context.Context) (map[string]string, *probe.
 }
 
 // Set object retention for a given object.
-func (f *fsClient) PutObjectRetention(_ context.Context, _ string, _ minio.RetentionMode, _ time.Time, _ bool) *probe.Error {
+func (f *fsClient) PutObjectRetention(_ context.Context, _ string, _ s3.RetentionMode, _ time.Time, _ bool) *probe.Error {
 	return probe.NewError(APINotImplemented{
 		API:     "PutObjectRetention",
 		APIType: "filesystem",
 	})
 }
 
-func (f *fsClient) GetObjectRetention(_ context.Context, _ string) (minio.RetentionMode, time.Time, *probe.Error) {
+func (f *fsClient) GetObjectRetention(_ context.Context, _ string) (s3.RetentionMode, time.Time, *probe.Error) {
 	return "", time.Time{}, probe.NewError(APINotImplemented{
 		API:     "GetObjectRetention",
 		APIType: "filesystem",
@@ -1260,7 +1260,7 @@ func (f *fsClient) GetObjectRetention(_ context.Context, _ string) (minio.Retent
 }
 
 // Set object legal hold for a given object.
-func (f *fsClient) PutObjectLegalHold(_ context.Context, _ string, _ minio.LegalHoldStatus) *probe.Error {
+func (f *fsClient) PutObjectLegalHold(_ context.Context, _ string, _ s3.LegalHoldStatus) *probe.Error {
 	return probe.NewError(APINotImplemented{
 		API:     "PutObjectLegalHold",
 		APIType: "filesystem",
@@ -1268,7 +1268,7 @@ func (f *fsClient) PutObjectLegalHold(_ context.Context, _ string, _ minio.Legal
 }
 
 // Get object legal hold for a given object.
-func (f *fsClient) GetObjectLegalHold(_ context.Context, _ string) (minio.LegalHoldStatus, *probe.Error) {
+func (f *fsClient) GetObjectLegalHold(_ context.Context, _ string) (s3.LegalHoldStatus, *probe.Error) {
 	return "", probe.NewError(APINotImplemented{
 		API:     "GetObjectLegalHold",
 		APIType: "filesystem",
@@ -1447,8 +1447,8 @@ func (f *fsClient) SetLifecycle(_ context.Context, _ *lifecycle.Configuration) *
 }
 
 // Get version info for a bucket, not implemented.
-func (f *fsClient) GetVersion(_ context.Context) (minio.BucketVersioningConfiguration, *probe.Error) {
-	return minio.BucketVersioningConfiguration{}, probe.NewError(APINotImplemented{
+func (f *fsClient) GetVersion(_ context.Context) (s3.BucketVersioningConfiguration, *probe.Error) {
+	return s3.BucketVersioningConfiguration{}, probe.NewError(APINotImplemented{
 		API:     "GetVersion",
 		APIType: "filesystem",
 	})

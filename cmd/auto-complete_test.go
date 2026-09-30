@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/minio/cli"
+	"github.com/hanzoai/s3-cli/pkg/cli"
 )
 
 func TestAutoCompletionCompletness(t *testing.T) {

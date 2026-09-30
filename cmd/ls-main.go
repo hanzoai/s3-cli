@@ -24,9 +24,9 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 // ls specific flags.
@@ -58,7 +58,7 @@ var (
 		},
 		cli.BoolFlag{
 			Name:  "zip",
-			Usage: "list files inside zip archive (MinIO servers only)",
+			Usage: "list files inside zip archive (Hanzo S3 servers only)",
 		},
 	}
 )

@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzos3/go/pkg/lifecycle"
 )
 
 // Used in tags. Ex: --tags "key1=value1&key2=value2&key3=value3"

@@ -20,8 +20,8 @@ package cmd
 import (
 	"sync"
 
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/pkg/v3/quick"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/quick"
 )
 
 const (

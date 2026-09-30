@@ -20,7 +20,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/minio/cli"
+	"github.com/hanzoai/s3-cli/pkg/cli"
 )
 
 func TestCLIOnUsageError(t *testing.T) {

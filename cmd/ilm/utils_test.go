@@ -20,7 +20,7 @@ package ilm
 import (
 	"testing"
 
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
+	"github.com/hanzos3/go/pkg/lifecycle"
 )
 
 func TestILMTags(t *testing.T) {

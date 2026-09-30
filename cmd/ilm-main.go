@@ -19,13 +19,12 @@ package cmd
 
 import (
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
 )
 
 var ilmSubcommands = []cli.Command{
 	ilmRuleCmd,
-	ilmTierCmd,
 	ilmRestoreCmd,
 }
 

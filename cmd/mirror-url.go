@@ -26,9 +26,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minio/cli"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/wildcard"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/wildcard"
+	s3 "github.com/hanzos3/go"
 )
 
 //
@@ -274,7 +274,7 @@ type mirrorOptions struct {
 	olderThan, newerThan                                  string
 	storageClass                                          string
 	userMetadata                                          map[string]string
-	checksum                                              minio.ChecksumType
+	checksum                                              s3.ChecksumType
 	sourceListingOnly                                     bool
 	maxWorkers                                            int
 }

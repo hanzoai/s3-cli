@@ -30,17 +30,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hanzoai/s3-cli/pkg/env"
+	"github.com/hanzoai/s3-cli/pkg/httptracer"
+	"github.com/hanzoai/s3-cli/pkg/limiter"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/cors"
+	"github.com/hanzos3/go/pkg/credentials"
+	"github.com/hanzos3/go/pkg/encrypt"
+	"github.com/hanzos3/go/pkg/lifecycle"
+	"github.com/hanzos3/go/pkg/replication"
 	"github.com/klauspost/compress/gzhttp"
-	"github.com/minio/mc/pkg/httptracer"
-	"github.com/minio/mc/pkg/limiter"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/cors"
-	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/minio/minio-go/v7/pkg/encrypt"
-	"github.com/minio/minio-go/v7/pkg/lifecycle"
-	"github.com/minio/minio-go/v7/pkg/replication"
-	"github.com/minio/pkg/v3/env"
 )
 
 // DirOpt - list directory option.
@@ -76,7 +76,7 @@ type PutOptions struct {
 	multipartThreads      uint
 	concurrentStream      bool
 	ifNotExists           bool
-	checksum              minio.ChecksumType
+	checksum              s3.ChecksumType
 }
 
 // StatOptions holds options of the HEAD operation
@@ -134,8 +134,8 @@ type Client interface {
 	ListBuckets(ctx context.Context) ([]*ClientContent, *probe.Error)
 
 	// Object lock config
-	SetObjectLockConfig(ctx context.Context, mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit) *probe.Error
-	GetObjectLockConfig(ctx context.Context) (status string, mode minio.RetentionMode, validity uint64, unit minio.ValidityUnit, perr *probe.Error)
+	SetObjectLockConfig(ctx context.Context, mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit) *probe.Error
+	GetObjectLockConfig(ctx context.Context) (status string, mode s3.RetentionMode, validity uint64, unit s3.ValidityUnit, perr *probe.Error)
 
 	// Access policy operations.
 	GetAccess(ctx context.Context) (access, policyJSON string, err *probe.Error)
@@ -153,10 +153,10 @@ type Client interface {
 	Put(ctx context.Context, reader io.Reader, size int64, progress io.Reader, opts PutOptions) (n int64, err *probe.Error)
 
 	// Object Locking related API
-	PutObjectRetention(ctx context.Context, versionID string, mode minio.RetentionMode, retainUntilDate time.Time, bypassGovernance bool) *probe.Error
-	GetObjectRetention(ctx context.Context, versionID string) (minio.RetentionMode, time.Time, *probe.Error)
-	PutObjectLegalHold(ctx context.Context, versionID string, hold minio.LegalHoldStatus) *probe.Error
-	GetObjectLegalHold(ctx context.Context, versionID string) (minio.LegalHoldStatus, *probe.Error)
+	PutObjectRetention(ctx context.Context, versionID string, mode s3.RetentionMode, retainUntilDate time.Time, bypassGovernance bool) *probe.Error
+	GetObjectRetention(ctx context.Context, versionID string) (s3.RetentionMode, time.Time, *probe.Error)
+	PutObjectLegalHold(ctx context.Context, versionID string, hold s3.LegalHoldStatus) *probe.Error
+	GetObjectLegalHold(ctx context.Context, versionID string) (s3.LegalHoldStatus, *probe.Error)
 
 	// I/O operations with expiration
 	ShareDownload(ctx context.Context, versionID string, expires time.Duration) (string, *probe.Error)
@@ -181,7 +181,7 @@ type Client interface {
 	SetLifecycle(ctx context.Context, config *lifecycle.Configuration) *probe.Error
 
 	// Versioning operations
-	GetVersion(ctx context.Context) (minio.BucketVersioningConfiguration, *probe.Error)
+	GetVersion(ctx context.Context) (s3.BucketVersioningConfiguration, *probe.Error)
 	SetVersion(ctx context.Context, status string, prefixes []string, excludeFolders bool) *probe.Error
 	// Replication operations
 	GetReplication(ctx context.Context) (replication.Config, *probe.Error)
@@ -240,7 +240,7 @@ type ClientContent struct {
 	IsLatest          bool
 	ReplicationStatus string
 
-	Restore *minio.RestoreInfo
+	Restore *s3.RestoreInfo
 
 	Err *probe.Error
 }
@@ -257,7 +257,7 @@ type Config struct {
 	AppVersion        string
 	Debug             bool
 	Insecure          bool
-	Lookup            minio.BucketLookupType
+	Lookup            s3.BucketLookupType
 	ConnReadDeadline  time.Duration
 	ConnWriteDeadline time.Duration
 	UploadLimit       int64
@@ -407,7 +407,7 @@ func (config *Config) initTransport(withS3v2 bool) {
 type SelectObjectOpts struct {
 	InputSerOpts    map[string]map[string]string
 	OutputSerOpts   map[string]map[string]string
-	CompressionType minio.SelectCompressionType
+	CompressionType s3.SelectCompressionType
 }
 
 type headerTransport struct {

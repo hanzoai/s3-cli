@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/minio/cli"
+	"github.com/hanzoai/s3-cli/pkg/cli"
 )
 
 func checkCopySyntax(cliCtx *cli.Context) {

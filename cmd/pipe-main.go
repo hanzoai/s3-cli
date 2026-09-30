@@ -25,15 +25,15 @@ import (
 	"syscall"
 
 	"github.com/dustin/go-humanize"
-	"github.com/minio/cli"
-	json "github.com/minio/colorjson"
-	"github.com/minio/mc/pkg/probe"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	json "github.com/hanzoai/s3-cli/pkg/colorjson"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	"github.com/hanzoai/s3-cli/pkg/probe"
+	s3 "github.com/hanzos3/go"
 )
 
 func defaultPartSize() string {
-	_, partSize, _, _ := minio.OptimalPartInfo(-1, 0)
+	_, partSize, _, _ := s3.OptimalPartInfo(-1, 0)
 	return humanize.IBytes(uint64(partSize))
 }
 

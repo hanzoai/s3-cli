@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/minio/cli"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/pkg/v3/console"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/console"
+	s3 "github.com/hanzos3/go"
 )
 
 var lhClearFlags = []cli.Flag{
@@ -100,5 +100,5 @@ func mainLegalHoldClear(cliCtx *cli.Context) error {
 		fatalIf(errDummy().Trace(), "Bucket locking needs to be enabled in order to use this feature.")
 	}
 
-	return setLegalHold(ctx, targetURL, versionID, timeRef, withVersions, recursive, minio.LegalHoldDisabled)
+	return setLegalHold(ctx, targetURL, versionID, timeRef, withVersions, recursive, s3.LegalHoldDisabled)
 }

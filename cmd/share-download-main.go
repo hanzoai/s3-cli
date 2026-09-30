@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/minio/cli"
-	"github.com/minio/mc/pkg/probe"
+	"github.com/hanzoai/s3-cli/pkg/cli"
+	"github.com/hanzoai/s3-cli/pkg/probe"
 )
 
 var shareDownloadFlags = []cli.Flag{

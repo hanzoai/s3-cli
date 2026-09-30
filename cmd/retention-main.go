@@ -18,7 +18,7 @@
 package cmd
 
 import (
-	"github.com/minio/cli"
+	"github.com/hanzoai/s3-cli/pkg/cli"
 )
 
 var retentionSubcommands = []cli.Command{
