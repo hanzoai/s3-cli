@@ -2,6 +2,8 @@
 
 # Hanzo S3 CLI
 
+[![Open in Hanzo](https://hanzo.app/badges/open-in-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/s3-cli&ref=main&action=open) [![Edit with Hanzo](https://hanzo.app/badges/edit-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/s3-cli&ref=main&action=edit) [![Deploy with Hanzo](https://hanzo.app/badges/deploy-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/s3-cli&ref=main&action=deploy)
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/hanzos3/cli)](https://goreportcard.com/report/github.com/hanzos3/cli) [![license](https://img.shields.io/badge/license-AGPL%20V3-blue)](https://github.com/hanzos3/cli/blob/main/LICENSE)
 
 ## Documentation
